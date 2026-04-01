@@ -30,11 +30,19 @@ vector<Token> tokenize(const string& line) {
             p.value = string(1, line[i]);
             tokens.push_back(p);
         }
-        while(isdigit(line[i])) {
+
+        if (isdigit(line[i])) {
+            string num;
+            while(isdigit(line[i])){
+                num += line[i];
+                i++;
+            }
             Token p;
-            p.value = string(i, line[i]);
+            p.value = num;
             tokens.push_back(p);
+            i--;
         }
+
 
     }
     return tokens;
@@ -48,6 +56,12 @@ bool isOperator(const string& s) {
 
 int precedence(const string& op) {
     // TODO
+    if (op == "+" || op == "-") {
+        return 1;
+    }
+    if (op == "*" || op == "/") {
+        return 2;
+    }
     return 0;
 }
 
@@ -55,13 +69,55 @@ int precedence(const string& op) {
 
 bool isValidPostfix(const vector<Token>& tokens) {
     // TODO
-    return false;
+    int pFix = 0;
+    for (const auto& token : tokens) {
+        if (tokens.empty()) {
+            return false;
+        }
+        if (isdigit(token.value[0])) {
+           pFix++;
+        }
+        else if (isOperator(token.value)) {
+            if (pFix < 2) {  // having one number and reading in an operation invalidates PostFix
+                return false;
+            }
+            pFix--; // successful operations combine two numbers into one
+        }
+        else {
+            return false;
+        }
+    }
+    return pFix == 1; //if everything goes right, count has to be 1 because of our result
 }
 
 bool isValidInfix(const vector<Token>& tokens) {
     // TODO
-    return false;
+    if (tokens.empty()) {
+        return false;
+    }
+    bool numberNext = true; //following number operator number pattern, so we expect a number first
+
+    for (const auto& token : tokens) {
+        if (numberNext) { // Progress if we are expecting a number, accept the number and then change our status so we expect an operator next
+            if (isdigit(token.value[0])) { // Skip this code chunk in the next iteration because numberNext is false
+                numberNext = false;
+            } else {
+                return false;
+            }
+        }
+        else {
+            if (isOperator(token.value)) { // Accept an operator and flip the boolean so we take in a number next and dodge this chunk in the next interation.
+                numberNext = true;
+            } else {
+                return false;
+            }
+        }
+    }
+    return !numberNext; // InvalidInFix if string ends with an operator which would mean numberNext would have to be true. Flip the boolean when returning it to accuarately see if its valid.
+
 }
+
+
 
 // Conversion
 
@@ -150,6 +206,8 @@ int main() {
     // Both Top and Pop throw errors accordingly.
     */
 
+    /*
+    cout << "---- Tokenizer Test ----" << endl;
     string line;
     getline(cin, line);
     vector<Token> tokens = tokenize(line);
@@ -157,6 +215,13 @@ int main() {
     for (const auto& token : tokens) {
         cout << "[" << token.value << "] ";
     }
+    */
+
+    cout << "---- Precedance Test ----" << endl;
+    cout << precedence("+") << endl;
+    cout << precedence("-") << endl;
+    cout << precedence("*") << endl;
+    cout << precedence("/") << endl;
 
     return 0;
 }
