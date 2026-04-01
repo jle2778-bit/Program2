@@ -153,16 +153,35 @@ double evalPostfix(const vector<Token>& tokens) {
     // TODO
     for (const auto& token : tokens) {
         if (isdigit(token.value[0])) {
-            stack.push(stod)
+            stack.push(stod(token.value)); //convert "string" numbers to double and push into stack
+        }
+        else if (isOperator(token.value)) {
+            double b = stack.top();
+            stack.pop();            // pop 'b' first to perserve order, "a - b"
+            double a = stack.top();
+            stack.pop();
+
+            if (token.value == "+") {
+                stack.push(a + b);
+            }
+            else if (token.value == "-") {
+                stack.push(a - b);
+            }
+            else if(token.value == "*") {
+                stack.push(a * b);
+            }
+            else if (token.value == "/") {
+                stack.push(a / b);
+            }
         }
     }
-    return 0.0;
+    return stack.top();
 }
 
 // Main
 
 int main() {
-    /*
+
     string line;
     getline(cin, line);
 
@@ -188,7 +207,7 @@ int main() {
     }
 
     return 0;
-    */
+
 
     /*
     cout << "----- ARRAYSTACK TEST -----" << endl;
