@@ -19,6 +19,24 @@ struct Token {
 vector<Token> tokenize(const string& line) {
     vector<Token> tokens;
     // TODO
+    for (int i = 0; i < line.length(); i++) {
+        if (line[i] == '(' || line[i] == ')') {
+            Token p;
+            p.value = string(1, line[i]);
+            tokens.push_back(p);
+        }
+        if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
+            Token p;
+            p.value = string(1, line[i]);
+            tokens.push_back(p);
+        }
+        while(isdigit(line[i])) {
+            Token p;
+            p.value = string(i, line[i]);
+            tokens.push_back(p);
+        }
+
+    }
     return tokens;
 }
 
@@ -92,6 +110,7 @@ int main() {
     return 0;
     */
 
+    /*
     cout << "----- ARRAYSTACK TEST -----" << endl;
     ArrayStack<int> testNonEmpty;
     testNonEmpty.push(1);
@@ -128,6 +147,16 @@ int main() {
     cout << "Top:" << testNonEmpty.top() << endl;
     testNonEmpty.pop();
 
-
     // Both Top and Pop throw errors accordingly.
+    */
+
+    string line;
+    getline(cin, line);
+    vector<Token> tokens = tokenize(line);
+
+    for (const auto& token : tokens) {
+        cout << "[" << token.value << "] ";
+    }
+
+    return 0;
 }
