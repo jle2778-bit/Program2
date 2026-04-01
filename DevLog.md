@@ -12,10 +12,18 @@ by calling it on the stack before and after it got emptied.
 # Bug and Issues
 Comparison issues stemming from mismatched types (character and string) threw errors when I was comparing inputs and assigning characters.
 The errors were fixed by converting types properly. 
-
+# Code Testing
 Testing exposed another error where I was not able to detect multi-digit numbers.
 I solved this by switching out a forloop for a whileloop, added a temp string that would append numbers if the next character was a digit, and added a i++ because it was
 infinite looping because no iteration was happening inside the whileloop. Outside of the whileloop, I used num to assign th digit values. 
-
 After testing again, operations and paretheses would disappear and this was because the whileloop would continue until it would get to a non-number, and then 
-return to the forloop which would i++ again, effectively skipping over anything that wasn't a number. I solved this by backtracking(i--) once after exiting the whileloop. 
+return to the forloop which would i++ again, effectively skipping over anything that wasn't a number. I solved this by backtracking(i--) once after exiting the whileloop.
+
+
+3/31/26 Developing IsValidInflix
+# Developmental Choices 
+Tried to mimic the format of IsValidPostFix and change around some conditions to cater to the alternating nature of InValidInfix because I thought they could be done similarly. However, they 
+do perform different processes, the IsValidPostFix method checks to see if we have enough numbers to preform operations properly, while IsValidInfix, checks to see if the string 
+follows the pattern "number operator number". I abandoned my past idea because the format was not about matching numbers and operators. I switched my format to an alternating "case" 
+format, which uses the boolean numberNext to validate and choose which case it would progress to. After it reaches a case, it alternates between true or false, with true meaning 
+that we expect a number to be next. Our final return statement being boolean != nextNumber, which indicates that if the last read in character is an operator, this InFix is invalid.

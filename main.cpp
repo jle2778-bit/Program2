@@ -123,7 +123,26 @@ bool isValidInfix(const vector<Token>& tokens) {
 
 vector<Token> infixToPostfix(const vector<Token>& tokens) {
     vector<Token> output;
+    ArrayStack<Token> storedOps; // Stack to hold operators
     // TODO
+    for (const auto& token : tokens) {
+
+        if (isdigit(token.value[0])) { //any number immediately gets outputted
+            output.push_back(token);
+        }
+
+        else if (isOperator(token.value)) {
+            while (!storedOps.empty() && precedence(storedOps.top().value) > precedence(token.value)) {
+                output.push_back(storedOps.top()); // the line above compares the precdent of the operation on the stack and our current one, if the one on the stack is higher, we push it out first.
+                storedOps.pop(); // remove precedent operator from top of stack
+            }
+            storedOps.push(token); //Now is the new top of the stack
+        }
+    }
+    while (!storedOps.empty()) { //push all our remaining operators
+        output.push_back(storedOps.top());
+        storedOps.pop();
+    }
     return output;
 }
 
@@ -132,6 +151,11 @@ vector<Token> infixToPostfix(const vector<Token>& tokens) {
 double evalPostfix(const vector<Token>& tokens) {
     ArrayStack<double> stack;
     // TODO
+    for (const auto& token : tokens) {
+        if (isdigit(token.value[0])) {
+            stack.push(stod)
+        }
+    }
     return 0.0;
 }
 
